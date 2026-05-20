@@ -1,0 +1,8 @@
+*.pdf
+*.csv
+*.pyc
+.venv/
+__pycache__/
+.DS_Store
+CLAUDE.md
+BEIS_Schools_Slicer_Spec.md
