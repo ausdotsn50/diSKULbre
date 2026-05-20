@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block title %}Explore Page{% endblock %}
+
+{% block content %}
+
+    {% for school in schools %}
+        {{school}}
+    {% endfor %}
+
+{% endblock %}
