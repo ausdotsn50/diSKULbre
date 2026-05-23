@@ -1,0 +1,65 @@
+{% include "partials/results.html" %}
+
+{# OOB: update stats strip on every filter change #}
+<!-- HTMX for the filter summary -->
+<span class="stat-value" id="stat-total" hx-swap-oob="outerHTML">{{ aggregates.total }}</span>
+
+<span class="stat-pills" id="stat-sector" hx-swap-oob="outerHTML">
+  {% for label, count in aggregates.by_sector.items() %}
+    <span class="stat-pill">{{ label }} <em>{{ count }}</em></span>
+  {% endfor %}
+</span>
+
+<span class="stat-pills" id="stat-urban-rural" hx-swap-oob="outerHTML">
+  {% for label, count in aggregates.by_urban_rural.items() %}
+    <span class="stat-pill">{{ label }} <em>{{ count }}</em></span>
+  {% endfor %}
+</span>
+
+<span class="stat-pills" id="stat-offering" hx-swap-oob="outerHTML">
+  {% for label, count in aggregates.by_offering.items() %}
+    <span class="stat-pill">{{ label }} <em>{{ count }}</em></span>
+  {% endfor %}
+</span>
+
+<span class="stat-pills" id="stat-subclass" hx-swap-oob="outerHTML">
+  {% for label, count in aggregates.by_subclass.items() %}
+    <span class="stat-pill">{{ label }} <em>{{ count }}</em></span>
+  {% endfor %}
+</span>
+
+{# OOB: narrow #division options after region or district changes #}
+<select
+  id="division"
+  name="division"
+  class="filter-select"
+  hx-get="/explore"
+  hx-trigger="change"
+  hx-target="#results"
+  hx-swap="innerHTML"
+  hx-include="[name]"
+  hx-swap-oob="outerHTML"
+>
+  <option value="">All divisions</option>
+  {% for d in options.divisions %}
+    <option value="{{ d }}" {% if filters.division == d %}selected{% endif %}>{{ d }}</option>
+  {% endfor %}
+</select>
+
+{# OOB: narrow #district options after region or division changes #}
+<select
+  id="district"
+  name="district"
+  class="filter-select"
+  hx-get="/explore"
+  hx-trigger="change"
+  hx-target="#results"
+  hx-swap="innerHTML"
+  hx-include="[name]"
+  hx-swap-oob="outerHTML"
+>
+  <option value="">All districts</option>
+  {% for d in options.districts %}
+    <option value="{{ d }}" {% if filters.district == d %}selected{% endif %}>{{ d }}</option>
+  {% endfor %}
+</select>
