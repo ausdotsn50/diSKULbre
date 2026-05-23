@@ -1,17 +1,144 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="light">
 <head>
-    {% block head %}
-    <link rel="stylesheet" href="style.css" />
-    <title>{% block title %}{% endblock %}</title>
-    {% endblock %}
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A public slicer for the DepEd school masterlist.">
+
+  <title>{% block title %}BEIS Schools Slicer{% endblock %}</title>
+
+  <!-- Pico.css — classless semantic defaults -->
+  <link
+    rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.classless.min.css"
+  >
+
+  <!-- Google Fonts — Playfair Display (headers) + DM Mono (data) + Source Serif 4 (body) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=DM+Mono:wght@400;500&family=Source+Serif+4:ital,wght@0,300;0,400;1,300&display=swap"
+    rel="stylesheet"
+  >
+
+  <!-- App styles -->
+  <link rel="stylesheet" href="/static/style.css">
+
+  {% block head_extra %}{% endblock %}
 </head>
+
 <body>
-    <div id="content">{% block content %}{% endblock %}</div>
-    <div id="footer">
-        {% block footer %}
-        &copy; Copyright 2008 by <a href="http://domain.invalid/">you</a>.
-        {% endblock %}
+
+  <!-- Navigation -->
+  <header class="site-nav">
+    <div class="nav-inner">
+      <a href="/" class="site-wordmark">
+        <span class="wordmark-main">BEIS</span><span class="wordmark-sub">Schools Slicer</span>
+      </a>
+      <nav class="nav-links">
+        <a href="/explore">Explore</a>
+        <a href="/about">About</a>
+      </nav>
     </div>
+  </header>
+
+  <!-- ============================================================
+       STATS STRIP
+       Populated server-side on every render.
+       On HTMX filter changes, only the #stats-strip inner content
+       is swapped via partials/aggregates.html.j2.
+  ============================================================ -->
+  <div class="stats-strip" id="stats-strip">
+    <div class="stats-inner">
+
+      <div class="stat-block stat-block--total">
+        <span class="stat-label">Schools</span>
+        <span class="stat-value" id="stat-total">
+          {{ aggregates.total if aggregates else '—' }}
+        </span>
+      </div>
+
+      <div class="stat-divider" aria-hidden="true"></div>
+
+      <div class="stat-block">
+        <span class="stat-label">Sector</span>
+        <span class="stat-pills" id="stat-sector">
+          {% if aggregates and aggregates.by_sector %}
+            {% for label, count in aggregates.by_sector.items() %}
+              <span class="stat-pill">{{ label }} <em>{{ count }}</em></span>
+            {% endfor %}
+          {% else %}
+            <span class="stat-pill stat-pill--empty">—</span>
+          {% endif %}
+        </span>
+      </div>
+
+      <div class="stat-divider" aria-hidden="true"></div>
+
+      <div class="stat-block">
+        <span class="stat-label">Setting</span>
+        <span class="stat-pills" id="stat-urban-rural">
+          {% if aggregates and aggregates.by_urban_rural %}
+            {% for label, count in aggregates.by_urban_rural.items() %}
+              <span class="stat-pill">{{ label }} <em>{{ count }}</em></span>
+            {% endfor %}
+          {% else %}
+            <span class="stat-pill stat-pill--empty">—</span>
+          {% endif %}
+        </span>
+      </div>
+
+      <div class="stat-divider" aria-hidden="true"></div>
+
+      <div class="stat-block stat-block--wide">
+        <span class="stat-label">Offering</span>
+        <span class="stat-pills" id="stat-offering">
+          {% if aggregates and aggregates.by_offering %}
+            {% for label, count in aggregates.by_offering.items() %}
+              <span class="stat-pill">{{ label }} <em>{{ count }}</em></span>
+            {% endfor %}
+          {% else %}
+            <span class="stat-pill stat-pill--empty">—</span>
+          {% endif %}
+        </span>
+      </div>
+
+      <div class="stat-divider" aria-hidden="true"></div>
+
+      <div class="stat-block stat-block--wide">
+        <span class="stat-label">Type</span>
+        <span class="stat-pills" id="stat-subclass">
+          {% if aggregates and aggregates.by_subclass %}
+            {% for label, count in aggregates.by_subclass.items() %}
+              <span class="stat-pill">{{ label }} <em>{{ count }}</em></span>
+            {% endfor %}
+          {% else %}
+            <span class="stat-pill stat-pill--empty">—</span>
+          {% endif %}
+        </span>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Main content -->
+  <main class="site-main">
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- Footer -->
+  <footer class="site-footer">
+    <div class="footer-inner">
+      <span>Data: DepEd BEIS masterlist &mdash; snapshot, not live.</span>
+      <span>Not affiliated with DepEd.</span>
+      <a href="/about">Methodology &amp; citation guide &rarr;</a>
+    </div>
+  </footer>
+
+  <!-- HTMX 2.x -->
+  <script src="https://unpkg.com/htmx.org@2/dist/htmx.min.js"></script>
+
+  {% block scripts %}{% endblock %}
+
 </body>
 </html>

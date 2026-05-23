@@ -1,11 +1,212 @@
 {% extends "base.html" %}
 
-{% block title %}Explore Page{% endblock %}
+{% block title %}Explore Schools{% endblock %}
 
 {% block content %}
+<div class="explore-layout">
+  <aside class="filter-rail">
+    <form
+      id="filter-form"
+      method="get"
+      action="/explore"
+      autocomplete="off"
+    >
 
-    {% for school in schools %}
-        {{school}}
-    {% endfor %}
+      <div class="rail-header">
+        <span class="rail-title">Filters</span>
+        {% set active_count = filters | selectattr('value') | list | length %}
+        {% if active_count > 0 %}
+          <span class="filter-badge">{{ active_count }}</span>
+        {% endif %}
+        <a
+          href="/explore"
+          class="clear-link"
+          {% if active_count == 0 %}aria-disabled="true"{% endif %}
+        >Clear all</a>
+      </div>
 
+      <!-- Search bar -->
+      <div class="filter-group">
+        <label for="search" class="filter-label">Search</label>
+        <input
+          id="search"
+          type="search"
+          name="search"
+          value="{{ filters.search or '' }}"
+          placeholder="School name…"
+          class="filter-input"
+          hx-get="/explore"
+          hx-trigger="input changed delay:300ms"
+          hx-target="#results"
+          hx-swap="innerHTML"
+          hx-push-url="true"
+          hx-include="[name]"
+        >
+      </div>
+
+      <!-- Geography filter -->
+      <div class="filter-group">
+        <label for="region" class="filter-label">Region</label>
+        <select
+          id="region"
+          name="region"
+          class="filter-select"
+          hx-get="/explore"
+          hx-trigger="change"
+          hx-target="#results"
+          hx-swap="innerHTML"
+          hx-push-url="true"
+          hx-include="[name]"
+        >
+          <option value="">All regions</option>
+          {% for r in options.regions %}
+            <option value="{{ r }}" {% if filters.region == r %}selected{% endif %}>
+              {{ r }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label for="division" class="filter-label">Division</label>
+        <select
+          id="division"
+          name="division"
+          class="filter-select"
+          hx-get="/explore"
+          hx-trigger="change"
+          hx-target="#results"
+          hx-swap="innerHTML"
+          hx-include="[name]"
+        >
+          <option value="">All divisions</option>
+          {% for d in options.divisions %}
+            <option value="{{ d }}" {% if filters.division == d %}selected{% endif %}>{{ d }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label for="district" class="filter-label">District</label>
+        <select
+          id="district"
+          name="district"
+          class="filter-select"
+          hx-get="/explore"
+          hx-trigger="change"
+          hx-target="#results"
+          hx-swap="innerHTML"
+          hx-include="[name]"
+        >
+          <option value="">All districts</option>
+          {% for d in options.districts %}
+            <option value="{{ d }}" {% if filters.district == d %}selected{% endif %}>{{ d }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label for="sector" class="filter-label">Sector</label>
+        <select
+          id="sector"
+          name="sector"
+          class="filter-select"
+          hx-get="/explore"
+          hx-trigger="change"
+          hx-target="#results"
+          hx-swap="innerHTML"
+          hx-push-url="true"
+          hx-include="[name]"
+        >
+          <option value="">All sectors</option>
+          {% for s in options.sectors %}
+            <option value="{{ s }}" {% if filters.sector == s %}selected{% endif %}>
+              {{ s }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label for="urban_rural" class="filter-label">Setting</label>
+        <select
+          id="urban_rural"
+          name="urban_rural"
+          class="filter-select"
+          hx-get="/explore"
+          hx-trigger="change"
+          hx-target="#results"
+          hx-swap="innerHTML"
+          hx-push-url="true"
+          hx-include="[name]"
+        >
+          <option value="">Urban &amp; rural</option>
+          {% for ur in options.urban_rural %}
+            <option value="{{ ur }}" {% if filters.urban_rural == ur %}selected{% endif %}>
+              {{ ur }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label for="offering" class="filter-label">Offering</label>
+        <select
+          id="offering"
+          name="offering"
+          class="filter-select"
+          hx-get="/explore"
+          hx-trigger="change"
+          hx-target="#results"
+          hx-swap="innerHTML"
+          hx-push-url="true"
+          hx-include="[name]"
+        >
+          <option value="">All offerings</option>
+          {% for o in options.offerings %}
+            <option value="{{ o }}" {% if filters.offering == o %}selected{% endif %}>
+              {{ o }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label for="subclass" class="filter-label">Type</label>
+        <select
+          id="subclass"
+          name="subclass"
+          class="filter-select"
+          hx-get="/explore"
+          hx-trigger="change"
+          hx-target="#results"
+          hx-swap="innerHTML"
+          hx-push-url="true"
+          hx-include="[name]"
+        >
+          <option value="">All types</option>
+          {% for sc in options.subclasses %}
+            <option value="{{ sc }}" {% if filters.subclass == sc %}selected{% endif %}>
+              {{ sc }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+
+    </form>{# end #filter-form #}
+  </aside>
+
+  {# ============================================================
+     RESULTS
+     This div is the HTMX swap target. Its contents are replaced
+     by partials/results.html.j2 on every filter change.
+     On full-page load the server renders the partial inline here.
+  ============================================================ #}
+  <section class="results-pane" aria-live="polite" aria-label="School results">
+    <div id="results">
+      {% include "partials/results.html" %}
+    </div>
+  </section>
+
+</div>{# end .explore-layout #}
 {% endblock %}

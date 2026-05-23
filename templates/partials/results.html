@@ -1,0 +1,93 @@
+{# ============================================================
+   partials/results.html.j2
+   Rendered both:
+   - inline on full-page load (via {% include %} in explore.html.j2)
+   - as the HTMX swap target on filter changes
+
+   Context expected from the route:
+     schools      — paginated list of school dicts for current page
+     aggregates   — dict from compute_aggregates() for stats strip
+     pagination   — { page, total_pages, total_results, per_page }
+     filters      — dict of currently active filter values
+============================================================ #}
+
+{# --- Empty state -------------------------------------------- #}
+{% if not schools %}
+  <div class="empty-state" role="status">
+    <p class="empty-title">No schools match these filters.</p>
+    <p class="empty-hint">
+      Try removing a filter or
+      <a href="/explore">clearing all filters</a>
+      to see the full dataset.
+    </p>
+  </div>
+
+{# --- Results list ------------------------------------------- #}
+{% else %}
+  <ol class="results-list" start="{{ (pagination.page - 1) * pagination.per_page + 1 }}">
+    {% for school in schools %}
+      <li class="result-row">
+        <div class="result-main">
+          <a class="result-name" href="/school/{{ school.school_id }}">
+            {{ school.name }}
+          </a>
+          <span class="result-id">{{ school.school_id }}</span>
+        </div>
+        <div class="result-meta">
+          <span class="meta-item meta-item--location">{{ school.municipality }}</span>
+          <span class="meta-sep" aria-hidden="true">·</span>
+          <span class="meta-item meta-item--sector
+            {% if school.sector == 'Public' %}meta-item--public
+            {% elif school.sector == 'Private' %}meta-item--private
+            {% else %}meta-item--suc{% endif %}
+          ">{{ school.sector }}</span>
+          <span class="meta-sep" aria-hidden="true">·</span>
+          <span class="meta-item">{{ school.offering }}</span>
+        </div>
+      </li>
+    {% endfor %}
+  </ol>
+
+  {# --- Pagination ------------------------------------------- #}
+  {% if pagination.total_pages > 1 %}
+    <nav class="pagination" aria-label="Results pages">
+
+      {% set base_url = pagination.base_url %}
+
+      {% if pagination.page > 1 %}
+        <a
+          class="page-btn"
+          href="{{ base_url }}&page={{ pagination.page - 1 }}"
+          hx-get="{{ base_url }}&page={{ pagination.page - 1 }}"
+          hx-target="#results"
+          hx-swap="innerHTML"
+          hx-push-url="true"
+          aria-label="Previous page"
+        >← Prev</a>
+      {% else %}
+        <span class="page-btn page-btn--disabled" aria-disabled="true">← Prev</span>
+      {% endif %}
+
+      <span class="page-info">
+        Page <strong>{{ pagination.page }}</strong> of <strong>{{ pagination.total_pages }}</strong>
+      </span>
+
+      {% if pagination.page < pagination.total_pages %}
+        <a
+          class="page-btn"
+          href="{{ base_url }}&page={{ pagination.page + 1 }}"
+          hx-get="{{ base_url }}&page={{ pagination.page + 1 }}"
+          hx-target="#results"
+
+          hx-swap="innerHTML"
+          hx-push-url="true"
+          aria-label="Next page"
+        >Next →</a>
+      {% else %}
+        <span class="page-btn page-btn--disabled" aria-disabled="true">Next →</span>
+      {% endif %}
+
+    </nav>
+  {% endif %}
+
+{% endif %}{# end empty/results branch #}
