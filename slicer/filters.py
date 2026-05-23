@@ -36,13 +36,23 @@ def cascade_options(df: pd.DataFrame, filters: dict) -> dict:
         f = f[f["region"] == eff["region"]]
     divisions = f["division"].dropna().unique().tolist()
 
+    # Discard stale division if it doesn't belong to the current region
+    if eff.get("division") and eff["division"] not in divisions:
+        eff.pop("division")
+        eff.pop("district", None)
+
     if eff.get("division"):
         f = f[f["division"] == eff["division"]]
     districts = f["district"].dropna().unique().tolist()
+
+    # Discard stale district if it doesn't belong to the current division/region
+    if eff.get("district") and eff["district"] not in districts:
+        eff.pop("district")
 
     return {
         "divisions": divisions,
         "districts": districts,
         "effective_region": eff.get("region", ""),
         "effective_division": eff.get("division", ""),
+        "effective_district": eff.get("district", ""),
     }
