@@ -2,6 +2,91 @@
 
 {% block title %}Explore Schools{% endblock %}
 
+{% block head_extra %}
+<link rel="stylesheet" href="/static/explore.css">
+{% endblock %}
+
+{% block stat_strip %}
+<!-- ============================================================
+      STATS STRIP
+      Populated server-side on every render.
+      On HTMX filter changes, only the #stats-strip inner content
+      is swapped via partials/aggregates.html.j2.
+============================================================ -->
+<div class="stats-strip" id="stats-strip">
+  <div class="stats-inner">
+
+    <div class="stat-block stat-block--total">
+      <span class="stat-value" id="stat-total">
+        {{ aggregates.total if aggregates else '—' }}
+      </span>
+      <span class="stat-label">Schools</span>
+    </div>
+
+    <div class="stat-divider" aria-hidden="true"></div>
+
+    <div class="stat-block">
+      <span class="stat-label">Sector</span>
+      <span class="stat-pills" id="stat-sector">
+        {% if aggregates and aggregates.by_sector %}
+          {% for label, count in aggregates.by_sector.items() %}
+            <span class="stat-pill">{{ label }} <em>{{ count }}</em></span>
+          {% endfor %}
+        {% else %}
+          <span class="stat-pill stat-pill--empty">—</span>
+        {% endif %}
+      </span>
+    </div>
+
+    <div class="stat-divider" aria-hidden="true"></div>
+
+    <div class="stat-block">
+      <span class="stat-label">Setting</span>
+      <span class="stat-pills" id="stat-urban-rural">
+        {% if aggregates and aggregates.by_urban_rural %}
+          {% for label, count in aggregates.by_urban_rural.items() %}
+            <span class="stat-pill">{{ label }} <em>{{ count }}</em></span>
+          {% endfor %}
+        {% else %}
+          <span class="stat-pill stat-pill--empty">—</span>
+        {% endif %}
+      </span>
+    </div>
+
+    <div class="stat-divider" aria-hidden="true"></div>
+
+    <div class="stat-block stat-block--wide">
+      <span class="stat-label">Offering</span>
+      <span class="stat-pills" id="stat-offering">
+        {% if aggregates and aggregates.by_offering %}
+          {% for label, count in aggregates.by_offering.items() %}
+            <span class="stat-pill">{{ label }} <em>{{ count }}</em></span>
+          {% endfor %}
+        {% else %}
+          <span class="stat-pill stat-pill--empty">—</span>
+        {% endif %}
+      </span>
+    </div>
+
+    <div class="stat-divider" aria-hidden="true"></div>
+
+    <div class="stat-block stat-block--wide">
+      <span class="stat-label">Type</span>
+      <span class="stat-pills" id="stat-subclass">
+        {% if aggregates and aggregates.by_subclass %}
+          {% for label, count in aggregates.by_subclass.items() %}
+            <span class="stat-pill">{{ label }} <em>{{ count }}</em></span>
+          {% endfor %}
+        {% else %}
+          <span class="stat-pill stat-pill--empty">—</span>
+        {% endif %}
+      </span>
+    </div>
+
+  </div>
+</div>
+{% endblock %}
+
 {% block content %}
 <div class="explore-layout">
   <aside class="filter-rail">
@@ -33,7 +118,7 @@
           type="search"
           name="search"
           value="{{ filters.search or '' }}"
-          placeholder="School name…"
+          placeholder="Enter school name"
           class="filter-input"
           hx-get="/explore"
           hx-trigger="input changed delay:300ms"

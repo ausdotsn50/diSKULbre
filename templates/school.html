@@ -1,2 +1,195 @@
 {% extends "base.html" %}
 
+{% block title %}{{ school.name }}{% endblock %}
+
+{% block head_extra %}
+<link rel="stylesheet" href="/static/school.css">
+{% endblock %}
+
+{% block content %}
+
+<a class="back-link" href="/explore?district={{ school.district }}">
+  <img src="/static/icons/back.svg" alt="back-icon" aria-hidden="true" class="back-icon">
+  Explore more schools in {{ school.district }}
+</a>
+
+<div class="school-header">
+  <div class="school-header-main">
+    <h1 class="school-name">{{ school.name }}</h1>
+    <h2 class="school-beis-id">BEIS School ID: {{ school.school_id }}</h2>
+  </div>
+  <div class="school-header-meta">
+    <span class="school-tag school-tag--sector
+      {% if school.sector == 'Public' %}school-tag--public
+      {% elif school.sector == 'Private' %}school-tag--private
+      {% else %}school-tag--suc{% endif %}
+    ">{{ school.sector }}</span>
+    <span class="school-tag school-tag--setting">{{ school.urban_rural }}</span>
+    <span class="school-tag school-tag--offering">{{ school.offering }}</span>
+  </div>
+</div>
+
+{# ============================================================
+   MAIN GRID — fields + context
+============================================================ #}
+<div class="school-grid">
+
+  {# --- Left: all 13 fields --------------------------------- #}
+  <div class="school-fields">
+    <table class="field-table">
+      <tbody>
+
+        <tr class="field-row field-row--group-start">
+          <th class="field-label" scope="row">Region</th>
+          <td class="field-value">
+            {{ school.region }}
+          </td>
+        </tr>
+        <tr class="field-row">
+          <th class="field-label" scope="row">Division</th>
+          <td class="field-value">
+            {{ school.division }}
+          </td>
+        </tr>
+        <tr class="field-row">
+          <th class="field-label" scope="row">District</th>
+          <td class="field-value">
+            {{ school.district }}
+          </td>
+        </tr>
+        <tr class="field-row">
+          <th class="field-label" scope="row">Municipality / City</th>
+          <td class="field-value">
+            {{ school.municipality }}
+          </td>
+        </tr>
+        <tr class="field-row">
+          <th class="field-label" scope="row">Barangay</th>
+          <td class="field-value">
+            {{ school.barangay }}
+          </td>
+        </tr>
+        <tr class="field-row">
+          <th class="field-label" scope="row">Legislative district</th>
+          <td class="field-value">
+            {{ school.legislative_district }}
+          </td>
+        </tr>
+        <tr class="field-row">
+          <th class="field-label" scope="row">Street address</th>
+          <td class="field-value field-value--address">{{ school.address or '—' }}</td>
+        </tr>
+
+        <tr class="field-row">
+          <th class="field-label" scope="row">Sector</th>
+          <td class="field-value">{{ school.sector }}</td>
+        </tr>
+        <tr class="field-row">
+          <th class="field-label" scope="row">Setting</th>
+          <td class="field-value">{{ school.urban_rural }}</td>
+        </tr>
+        <tr class="field-row">
+          <th class="field-label" scope="row">School type</th>
+          <td class="field-value">{{ school.subclass }}</td>
+        </tr>
+        <tr class="field-row">
+          <th class="field-label" scope="row">Curricular offering</th>
+          <td class="field-value">{{ school.offering }}</td>
+        </tr>
+
+        <tr class="field-row field-row--group-start">
+          <th class="field-label" scope="row">BEIS School ID</th>
+          <td class="field-value field-value--mono">{{ school.school_id }}</td>
+        </tr>
+
+      </tbody>
+    </table>
+  </div>
+
+  {# --- Right: context + onward links ----------------------- #}
+  <div class="school-aside">
+
+    {# Contextual stats #}
+    <div class="context-card">
+      <h3 class="section-heading">In context</h3>
+
+      <div class="context-stat">
+        <span class="context-number">{{ context_stats.in_municipality }}</span>
+        <span class="context-desc">
+          school{{ 's' if context_stats.in_municipality != 1 }}
+          in <strong>{{ school.municipality }}</strong>
+        </span>
+      </div>
+
+      <div class="context-stat">
+        <span class="context-number">{{ context_stats.public_in_municipality }}</span>
+        <span class="context-desc">
+          are public
+        </span>
+      </div>
+
+      <div class="context-stat">
+        <span class="context-number">{{ context_stats.in_division }}</span>
+        <span class="context-desc">
+          school{{ 's' if context_stats.in_division != 1 }}
+          in <strong>{{ school.division }}</strong> division
+        </span>
+      </div>
+
+      <div class="context-stat">
+        <span class="context-number">{{ context_stats.same_offering_in_division }}</span>
+        <span class="context-desc">
+          offer <strong>{{ school.offering }}</strong>
+          in this division
+        </span>
+      </div>
+
+      {# Natural language phrasing e.g. "One of 47 schools in Tacloban City" #}
+      <p class="context-sentence">
+        One of {{ context_stats.in_municipality }}
+        school{{ 's' if context_stats.in_municipality != 1 }}
+        in {{ school.municipality }},
+        and one of {{ context_stats.same_offering_in_division }}
+        {{ school.offering }} school{{ 's' if context_stats.same_offering_in_division != 1 }}
+        in {{ school.division }} division.
+      </p>
+    </div>
+
+    {# Onward links #}
+    <div class="onward-card">
+      <h3 class="section-heading">Explore from here</h3>
+      <ul class="onward-links">
+        <li>
+          <a
+            class="onward-link"
+            href="/explore?municipality={{ school.municipality | urlencode }}"
+          >
+            <span class="onward-label">All schools in {{ school.municipality }}</span>
+            <span class="onward-count">{{ context_stats.in_municipality }}</span>
+          </a>
+        </li>
+        <li>
+          <a
+            class="onward-link"
+            href="/explore?division={{ school.division | urlencode }}"
+          >
+            <span class="onward-label">All schools in {{ school.division }} division</span>
+            <span class="onward-count">{{ context_stats.in_division }}</span>
+          </a>
+        </li>
+        <li>
+          <a
+            class="onward-link"
+            href="/explore?legislative_district={{ school.legislative_district | urlencode }}"
+          >
+            <span class="onward-label">All schools in {{ school.legislative_district }}</span>
+            <span class="onward-count">{{ context_stats.in_legislative_district }}</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+
+  </div>{# end .school-aside #}
+</div>{# end .school-grid #}
+
+{% endblock %}
