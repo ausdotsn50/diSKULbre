@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block title %}404 — Page not found{% endblock %}
+
+{% block content %}
+<div class="error-page">
+
+  <div class="error-code">404</div>
+
+  <h1 class="error-title">
+    {{ message if message else "Page not found." }}
+  </h1>
+
+  <p class="error-detail">
+    {% if school_id %}
+      No school with BEIS ID <span class="error-mono">{{ school_id }}</span>
+      exists in the dataset. The ID may be incorrect or the school
+      may have been removed from the masterlist.
+    {% else %}
+      The page you're looking for doesn't exist or has moved.
+    {% endif %}
+  </p>
+
+  <div class="error-actions">
+    <a class="error-btn error-btn--primary" href="/explore">
+      Search all schools
+    </a>
+    <a class="error-btn error-btn--secondary" href="/">
+      Go home
+    </a>
+  </div>
+
+</div>
+{% endblock %}
