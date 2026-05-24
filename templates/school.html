@@ -8,14 +8,15 @@
 
 {% block content %}
 
-<a class="back-link" href="/explore?municipality={{ school.municipality | urlencode }}">
-  ← All schools in {{ school.municipality }}
+<a class="back-link" href="/explore?district={{ school.district }}">
+  <img src="/static/icons/back.svg" alt="back-icon" aria-hidden="true" class="back-icon">
+  Explore more schools in {{ school.district }}
 </a>
 
 <div class="school-header">
   <div class="school-header-main">
     <h1 class="school-name">{{ school.name }}</h1>
-    <span class="school-beis-id">BEIS {{ school.school_id }}</span>
+    <h2 class="school-beis-id">BEIS School ID: {{ school.school_id }}</h2>
   </div>
   <div class="school-header-meta">
     <span class="school-tag school-tag--sector
@@ -35,54 +36,51 @@
 
   {# --- Left: all 13 fields --------------------------------- #}
   <div class="school-fields">
-    <h2 class="section-heading">School details</h2>
     <table class="field-table">
       <tbody>
 
         <tr class="field-row field-row--group-start">
           <th class="field-label" scope="row">Region</th>
           <td class="field-value">
-            <a href="/explore?region={{ school.region | urlencode }}">{{ school.region }}</a>
+            {{ school.region }}
           </td>
         </tr>
         <tr class="field-row">
           <th class="field-label" scope="row">Division</th>
           <td class="field-value">
-            <a href="/explore?division={{ school.division | urlencode }}">{{ school.division }}</a>
+            {{ school.division }}
           </td>
         </tr>
         <tr class="field-row">
           <th class="field-label" scope="row">District</th>
           <td class="field-value">
-            <a href="/explore?district={{ school.district | urlencode }}">{{ school.district }}</a>
+            {{ school.district }}
           </td>
         </tr>
         <tr class="field-row">
           <th class="field-label" scope="row">Municipality / City</th>
           <td class="field-value">
-            <a href="/explore?municipality={{ school.municipality | urlencode }}">{{ school.municipality }}</a>
+            {{ school.municipality }}
           </td>
         </tr>
         <tr class="field-row">
           <th class="field-label" scope="row">Barangay</th>
           <td class="field-value">
-            <a href="/explore?barangay={{ school.barangay | urlencode }}">{{ school.barangay }}</a>
+            {{ school.barangay }}
           </td>
         </tr>
-        <tr class="field-row field-row--group-start">
+        <tr class="field-row">
           <th class="field-label" scope="row">Legislative district</th>
           <td class="field-value">
-            <a href="/explore?legislative_district={{ school.legislative_district | urlencode }}">
-              {{ school.legislative_district }}
-            </a>
+            {{ school.legislative_district }}
           </td>
         </tr>
-        <tr class="field-row field-row--group-start">
+        <tr class="field-row">
           <th class="field-label" scope="row">Street address</th>
           <td class="field-value field-value--address">{{ school.address or '—' }}</td>
         </tr>
 
-        <tr class="field-row field-row--group-start">
+        <tr class="field-row">
           <th class="field-label" scope="row">Sector</th>
           <td class="field-value">{{ school.sector }}</td>
         </tr>
@@ -100,7 +98,7 @@
         </tr>
 
         <tr class="field-row field-row--group-start">
-          <th class="field-label" scope="row">BEIS ID</th>
+          <th class="field-label" scope="row">BEIS School ID</th>
           <td class="field-value field-value--mono">{{ school.school_id }}</td>
         </tr>
 
@@ -113,7 +111,7 @@
 
     {# Contextual stats #}
     <div class="context-card">
-      <h2 class="section-heading">In context</h2>
+      <h3 class="section-heading">In context</h3>
 
       <div class="context-stat">
         <span class="context-number">{{ context_stats.in_municipality }}</span>
@@ -129,8 +127,6 @@
           are public
         </span>
       </div>
-
-      <div class="context-divider" aria-hidden="true"></div>
 
       <div class="context-stat">
         <span class="context-number">{{ context_stats.in_division }}</span>
@@ -161,7 +157,7 @@
 
     {# Onward links #}
     <div class="onward-card">
-      <h2 class="section-heading">Explore from here</h2>
+      <h3 class="section-heading">Explore from here</h3>
       <ul class="onward-links">
         <li>
           <a
