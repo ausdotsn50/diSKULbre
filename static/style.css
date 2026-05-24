@@ -132,6 +132,7 @@ h1, h2, h3, h4 {
   top: var(--nav-h);
   z-index: 90;
   background: var(--ink);
+  padding: 1.25rem;
   border-bottom: 2px solid var(--accent);
   min-height: var(--strip-h);
   overflow-x: auto;
@@ -140,7 +141,6 @@ h1, h2, h3, h4 {
 .stats-inner {
   max-width: var(--max-w);
   margin: 0 auto;
-  padding: 0 1.5rem;
   display: flex;
   align-items: stretch;
   gap: 0;
@@ -176,17 +176,20 @@ h1, h2, h3, h4 {
 
 .stat-value {
   font-family: var(--font-mono);
-  font-size: 1.25rem;
+  font-size: 2.25rem;
   font-weight: 500;
   color: #f5f3ee;
   line-height: 1.1;
 }
 
 .stat-pills {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.3rem;
-  align-items: center;
+  display: grid;
+  row-gap: 0.3rem;
+  column-gap: 2.25rem;
+}
+
+#stat-offering, #stat-subclass {
+  grid-template-columns: 1fr 1fr;
 }
 
 .stat-pill {
