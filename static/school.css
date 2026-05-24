@@ -8,7 +8,9 @@
    School detail page
    ------------------------------------------------------------ */
 .back-link {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
   font-family: var(--font-mono);
   font-size: 0.72rem;
   font-weight: 500;
@@ -18,24 +20,24 @@
   margin-bottom: 1.25rem;
 }
 
-.back-link:hover {
+.back-icon {
+  width: 14px;
+  flex-shrink: 0;
+}
+
+.back-link:hover, .back-link img:hover {
   color: var(--accent);
   text-decoration: none;
 }
 
 /* Header */
 .school-header {
-  margin-bottom: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  margin-bottom: 1.25rem;
   padding-bottom: 1.25rem;
   border-bottom: 2px solid var(--ink);
-}
-
-.school-header-main {
-  display: flex;
-  align-items: baseline;
-  gap: 1rem;
-  flex-wrap: wrap;
-  margin-bottom: 0.6rem;
 }
 
 .school-name {
@@ -43,15 +45,15 @@
   font-size: 1.75rem;
   font-weight: 700;
   color: var(--ink);
-  margin: 0;
   line-height: 1.2;
 }
 
 .school-beis-id {
   font-family: var(--font-mono);
-  font-size: 0.72rem;
+  font-size: 0.8rem;
+  font-weight: 400;
   color: var(--ink-muted);
-  flex-shrink: 0;
+  margin: 0;
 }
 
 .school-header-meta {
@@ -69,9 +71,9 @@
   letter-spacing: 0.02em;
 }
 
-.school-tag--public   { background: #e8f4ee; color: #2a6e3f; }
-.school-tag--private  { background: #f4ede6; color: #7a4a1e; }
-.school-tag--suc      { background: #e6eef6; color: #1e4a7a; }
+.school-tag--public   { background: #e8f4ee; color: #2a6e3f; border: 1px solid var(--rule); }
+.school-tag--private  { background: #f4ede6; color: #7a4a1e; border: 1px solid var(--rule); }
+.school-tag--suc      { background: #e6eef6; color: #1e4a7a; border: 1px solid var(--rule); }
 .school-tag--setting  { background: var(--paper-raised); color: var(--ink-mid); border: 1px solid var(--rule); }
 .school-tag--offering { background: var(--paper-raised); color: var(--ink-mid); border: 1px solid var(--rule); }
 
@@ -80,12 +82,11 @@
   display: grid;
   grid-template-columns: 1fr 320px;
   gap: 2.5rem;
-  align-items: start;
+  align-items: stretch;
 }
 
 .section-heading {
   font-family: var(--font-mono);
-  font-size: 0.65rem;
   font-weight: 500;
   letter-spacing: 0.1em;
   text-transform: uppercase;
@@ -93,34 +94,39 @@
   margin-bottom: 0.85rem;
 }
 
-/* Field table */
+.school-fields {
+  background: var(--paper-raised);
+  border: 1px solid var(--rule);
+  border-radius: var(--card-radius);
+  padding: 1.25rem;
+}
+
 .field-table {
   width: 100%;
   border-collapse: collapse;
+  background: none;
 }
 
-.field-row {
-  border-bottom: 1px solid var(--rule);
+.field-table tr,
+.field-table td,
+.field-table th {
+  background: none;
+  border: none;
+  padding: 0.4rem 0 rem;
+  text-align: left;
 }
 
 .field-row:last-child {
   border-bottom: none;
 }
 
-.field-row--group-start {
-  border-top: 2px solid var(--rule);
-}
-
-.field-row--group-start:first-child {
-  border-top: none;
-}
-
 .field-label {
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
+  font-size: 0.68rem;
   font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
   color: var(--ink-muted);
-  padding: 0.55rem 1.5rem 0.55rem 0;
+  padding: 0.6rem 1.5rem 0.6rem 0;
   white-space: nowrap;
   vertical-align: top;
   width: 180px;
@@ -131,14 +137,15 @@
   font-family: var(--font-body);
   font-size: 0.9rem;
   color: var(--ink);
-  padding: 0.55rem 0;
+  padding: 0.6rem 0;
   vertical-align: top;
 }
 
 .field-value a {
-  color: var(--ink);
+  color: var(--ink-mid);
   text-decoration: none;
   border-bottom: 1px dotted var(--rule);
+  transition: color 120ms, border-color 120ms;
 }
 
 .field-value a:hover {
@@ -149,18 +156,20 @@
 .field-value--address {
   color: var(--ink-mid);
   font-size: 0.85rem;
+  font-style: italic;
 }
 
 .field-value--mono {
   font-family: var(--font-mono);
   font-size: 0.82rem;
   color: var(--ink-mid);
+  letter-spacing: 0.03em;
 }
 
 /* Context card */
 .context-card {
   background: var(--ink);
-  border-radius: var(--radius);
+  border-radius: var(--card-radius);
   padding: 1.25rem;
   margin-bottom: 1rem;
 }
@@ -214,7 +223,6 @@
   font-size: 0.78rem;
   font-style: italic;
   color: var(--ink-muted);
-  margin-top: 1rem;
   padding-top: 0.75rem;
   border-top: 1px solid rgba(255,255,255,0.08);
   line-height: 1.5;
@@ -224,7 +232,7 @@
 .onward-card {
   background: var(--paper-raised);
   border: 1px solid var(--rule);
-  border-radius: var(--radius);
+  border-radius: var(--card-radius);
   padding: 1.25rem;
 }
 

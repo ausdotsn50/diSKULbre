@@ -51,12 +51,41 @@ a {
 }
 a:hover { text-decoration: underline; }
 
+/* ------------------------------------------------------------
+   Typography scale
+   display  → Playfair Display  — headings, entity names
+   body     → Source Serif 4   — prose, field values, inputs
+   mono     → DM Mono          — labels, counts, IDs, nav, UI chrome
+   ------------------------------------------------------------ */
+h1 { font-size: 2rem; }
+h2 { font-size: 1.5rem; }
+h3 { font-size: 0.75rem; }
+h4 { font-size: 0.5rem; }
+
 h1, h2, h3, h4 {
   font-family: var(--font-display);
   font-weight: 700;
   line-height: 1.2;
   color: var(--ink);
   margin: 0 0 0.5em;
+}
+
+p {
+  font-family: var(--font-body);
+  margin: 0 0 1em;
+  line-height: 1.6;
+}
+
+label {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  font-weight: 500;
+}
+
+th {
+  font-family: var(--font-mono);
+  font-weight: 500;
+  text-align: left;
 }
 
 /* ------------------------------------------------------------
