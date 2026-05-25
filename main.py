@@ -1,6 +1,9 @@
 import math
 from urllib.parse import urlencode
 
+import os
+from dotenv import load_dotenv
+
 import uvicorn
 from fastapi import FastAPI, Query
 from fastapi.responses import HTMLResponse, RedirectResponse
@@ -13,12 +16,14 @@ from data.load import load_schools
 from slicer.filters import *
 from slicer.aggregates import compute_aggregates
 
+load_dotenv()
 app = FastAPI(title="BEIS Project")
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 
 PER_PAGE = 50
-DF = load_schools('data/beis_masterlist.csv')
+CSV_PATH = os.getenv("CSV_PATH")
+DF = load_schools(CSV_PATH)
 
 # Unique values
 OPTIONS = {
@@ -29,7 +34,7 @@ OPTIONS = {
     "subclasses": DF["subclass"].dropna().unique().tolist(),
 }
 
-def main():
+def main() -> None:
     """Entry point. Starts the Uvicorn development server."""
     uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)
 
