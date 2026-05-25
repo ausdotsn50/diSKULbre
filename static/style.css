@@ -254,6 +254,7 @@ th {
    ------------------------------------------------------------ */
 .site-main {
   max-width: var(--max-w);
+  min-height: 100vh;
   margin: 0 auto;
   padding: 2rem 1.5rem;
 }

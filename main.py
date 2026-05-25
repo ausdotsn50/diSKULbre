@@ -29,17 +29,19 @@ OPTIONS = {
     "subclasses": DF["subclass"].dropna().unique().tolist(),
 }
 
-
 def main():
     """Entry point. Starts the Uvicorn development server."""
     uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)
 
 
 # Routes
-@app.get("/", response_class=HTMLResponse)
-def index(request: Request) -> Response:
-    return templates.TemplateResponse(request, "base.html")
+@app.get("/")
+async def index():
+    return RedirectResponse(url="/explore")
 
+@app.get("/about", response_class=HTMLResponse)
+def about(request: Request) -> Response:
+    return templates.TemplateResponse(request, "about.html")
 
 @app.get("/explore")
 async def explore(
