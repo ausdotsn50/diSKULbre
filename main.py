@@ -106,14 +106,15 @@ async def explore(
             "total_pages": total_pages,
             "total_results": total_results,
             "per_page": PER_PAGE,
-            "base_url": f"/explore?{urlencode(filters)}" if filters else "/explore",
+            "base_url": f"/explore?{urlencode(filters)}&" if filters else "/explore?",
         },
     }
 
     if request.headers.get("HX-Request"):
-        qs = urlencode(filters)
+        qs_parts = [urlencode(filters)] if filters else []
         if page > 1:
-            qs += f"&page={page}"
+            qs_parts.append(f"page={page}")
+        qs = "&".join(qs_parts)
         clean_url = f"/explore?{qs}" if qs else "/explore"
 
         # Cascade-up: district (or division) inferred parent values — redirect so
@@ -130,9 +131,10 @@ async def explore(
         response.headers["HX-Push-Url"] = clean_url
         return response
 
-    qs = urlencode(filters)
+    qs_parts = [urlencode(filters)] if filters else []
     if page > 1:
-        qs += f"&page={page}"
+        qs_parts.append(f"page={page}")
+    qs = "&".join(qs_parts)
     dirty_qs = str(request.query_params)
     if dirty_qs != qs:
         return RedirectResponse(f"/explore?{qs}" if qs else "/explore")
