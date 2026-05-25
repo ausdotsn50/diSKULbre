@@ -8,9 +8,9 @@
 
 {% block content %}
 
-<a class="back-link" href="/explore?district={{ school.district }}">
+<a class="back-link" href="/explore?municipality={{ school.municipality }}">
   <img src="/static/icons/back.svg" alt="back-icon" aria-hidden="true" class="back-icon">
-  Explore more schools in {{ school.district }}
+  Explore more schools in {{ school.municipality }}
 </a>
 
 <div class="school-header">
@@ -160,10 +160,10 @@
         <li>
           <a
             class="onward-link"
-            href="/explore?municipality={{ school.municipality | urlencode }}"
+            href="/explore?region={{ school.region | urlencode }}"
           >
-            <span class="onward-label">All schools in {{ school.municipality }}</span>
-            <span class="onward-count">{{ context_stats.in_municipality }}</span>
+            <span class="onward-label">All schools in {{ school.region }}</span>
+            <span class="onward-count">{{ context_stats.in_region }}</span>
           </a>
         </li>
         <li>
@@ -178,10 +178,10 @@
         <li>
           <a
             class="onward-link"
-            href="/explore?region={{ school.region | urlencode }}"
+            href="/explore?district={{ school.district | urlencode }}"
           >
-            <span class="onward-label">All schools in {{ school.region }}</span>
-            <span class="onward-count">{{ context_stats.in_region }}</span>
+            <span class="onward-label">All schools in {{ school.district }}</span>
+            <span class="onward-count">{{ context_stats.in_district }}</span>
           </a>
         </li>
       </ul>
