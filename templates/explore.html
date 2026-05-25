@@ -191,6 +191,25 @@
       </div>
 
       <div class="filter-group">
+        <label for="municipality" class="filter-label">Municipality</label>
+        <select
+          id="municipality"
+          name="municipality"
+          class="filter-select"
+          hx-get="/explore"
+          hx-trigger="change"
+          hx-target="#results"
+          hx-swap="innerHTML"
+          hx-include="[name]"
+        >
+          <option value="">All municipalities</option>
+          {% for m in options.municipalities %}
+            <option value="{{ m }}" {% if filters.municipality == m %}selected{% endif %}>{{ m }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="filter-group">
         <label for="sector" class="filter-label">Sector</label>
         <select
           id="sector"

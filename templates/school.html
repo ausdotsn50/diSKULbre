@@ -140,11 +140,9 @@
         <span class="context-number">{{ context_stats.same_offering_in_division }}</span>
         <span class="context-desc">
           offer <strong>{{ school.offering }}</strong>
-          in this division
         </span>
       </div>
 
-      {# Natural language phrasing e.g. "One of 47 schools in Tacloban City" #}
       <p class="context-sentence">
         One of {{ context_stats.in_municipality }}
         school{{ 's' if context_stats.in_municipality != 1 }}
@@ -180,10 +178,10 @@
         <li>
           <a
             class="onward-link"
-            href="/explore?legislative_district={{ school.legislative_district | urlencode }}"
+            href="/explore?region={{ school.region | urlencode }}"
           >
-            <span class="onward-label">All schools in {{ school.legislative_district }}</span>
-            <span class="onward-count">{{ context_stats.in_legislative_district }}</span>
+            <span class="onward-label">All schools in {{ school.region }}</span>
+            <span class="onward-count">{{ context_stats.in_region }}</span>
           </a>
         </li>
       </ul>

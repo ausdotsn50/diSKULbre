@@ -30,6 +30,15 @@ def cascade_options(df: pd.DataFrame, filters: dict) -> dict:
         if not rows.empty:
             eff.setdefault("region", rows.iloc[0]["region"])
 
+    # Municipality cascade-up: infer division if municipality maps to exactly one division
+    if eff.get("municipality") and not eff.get("division"):
+        rows = df[df["municipality"] == eff["municipality"]]
+        if not rows.empty:
+            divs = rows["division"].dropna().unique()
+            if len(divs) == 1:
+                eff.setdefault("division", str(divs[0]))
+                eff.setdefault("region", str(rows.iloc[0]["region"]))
+
     # Cascade-down: narrow options based on active filters
     f = df
     if eff.get("region"):
@@ -40,19 +49,27 @@ def cascade_options(df: pd.DataFrame, filters: dict) -> dict:
     if eff.get("division") and eff["division"] not in divisions:
         eff.pop("division")
         eff.pop("district", None)
+        eff.pop("municipality", None)
 
     if eff.get("division"):
         f = f[f["division"] == eff["division"]]
     districts = f["district"].dropna().unique().tolist()
+    municipalities = f["municipality"].dropna().unique().tolist()
 
-    # Discard stale district if it doesn't belong to the current division/region
+    # Discard stale district
     if eff.get("district") and eff["district"] not in districts:
         eff.pop("district")
+
+    # Discard stale municipality
+    if eff.get("municipality") and eff["municipality"] not in municipalities:
+        eff.pop("municipality")
 
     return {
         "divisions": divisions,
         "districts": districts,
+        "municipalities": municipalities,
         "effective_region": eff.get("region", ""),
         "effective_division": eff.get("division", ""),
         "effective_district": eff.get("district", ""),
+        "effective_municipality": eff.get("municipality", ""),
     }

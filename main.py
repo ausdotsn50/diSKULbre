@@ -48,6 +48,7 @@ async def explore(
     region: str = Query(default=""),
     division: str = Query(default=""),
     district: str = Query(default=""),
+    municipality: str = Query(default=""),
     sector: str = Query(default=""),
     urban_rural: str = Query(default=""),
     offering: str = Query(default=""),
@@ -60,6 +61,7 @@ async def explore(
             "region": region,
             "division": division,
             "district": district,
+            "municipality": municipality,
             "sector": sector,
             "urban_rural": urban_rural,
             "offering": offering,
@@ -75,6 +77,7 @@ async def explore(
         ("region", "effective_region"),
         ("division", "effective_division"),
         ("district", "effective_district"),
+        ("municipality", "effective_municipality"),
     ]:
         effective = cascade_opts[eff_key]
         if effective:
@@ -115,7 +118,8 @@ async def explore(
         # the full page re-renders with all dropdowns correctly populated.
         cascade_up = (
             (cascade_opts["effective_region"] and not region) or
-            (cascade_opts["effective_division"] and not division)
+            (cascade_opts["effective_division"] and not division) or
+            (cascade_opts["effective_municipality"] and not municipality)
         )
         if cascade_up:
             return Response(content="", headers={"HX-Redirect": clean_url})
@@ -131,6 +135,37 @@ async def explore(
     if dirty_qs != qs:
         return RedirectResponse(f"/explore?{qs}" if qs else "/explore")
     return templates.TemplateResponse(request, "explore.html", context)
+
+
+# Check accuracy of school route
+@app.get("/school/{school_id}", response_class=HTMLResponse)
+async def school_detail(request: Request, school_id: str) -> Response:
+    row = DF[DF["school_id"] == school_id]
+    if row.empty:
+        return templates.TemplateResponse(request, "status/404.html", status_code=404)
+
+    school = row.iloc[0].to_dict()
+
+    # Modify for context stats in school
+    context_stats = {
+        "in_municipality": int((DF["municipality"] == school["municipality"]).sum()),
+        "public_in_municipality": int(
+            ((DF["municipality"] == school["municipality"]) & (DF["sector"] == "Public")).sum()
+        ),
+        "in_division": int((DF["division"] == school["division"]).sum()),
+        "same_offering_in_division": int(
+            ((DF["division"] == school["division"]) & (DF["offering"] == school["offering"])).sum()
+        ),
+        "in_region": int(
+            (DF["region"] == school["region"]).sum()
+        ),
+    }
+
+    return templates.TemplateResponse(request, "school.html", {
+        "school": school,
+        "context_stats": context_stats,
+        "aggregates": None,
+    })
 
 if __name__ == '__main__':
     main()

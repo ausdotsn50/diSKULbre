@@ -63,3 +63,21 @@
     <option value="{{ d }}" {% if filters.district == d %}selected{% endif %}>{{ d }}</option>
   {% endfor %}
 </select>
+
+{# OOB: narrow #municipality options after division changes #}
+<select
+  id="municipality"
+  name="municipality"
+  class="filter-select"
+  hx-get="/explore"
+  hx-trigger="change"
+  hx-target="#results"
+  hx-swap="innerHTML"
+  hx-include="[name]"
+  hx-swap-oob="outerHTML"
+>
+  <option value="">All municipalities</option>
+  {% for m in options.municipalities %}
+    <option value="{{ m }}" {% if filters.municipality == m %}selected{% endif %}>{{ m }}</option>
+  {% endfor %}
+</select>
