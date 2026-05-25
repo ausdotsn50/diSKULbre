@@ -28,6 +28,24 @@
   {% endfor %}
 </span>
 
+{# OOB: update filter badge and clear-all state #}
+{% set active_count = filters | length %}
+<div class="rail-header" id="rail-header" hx-swap-oob="outerHTML">
+  <span class="rail-title">Filters</span>
+  {% if active_count > 0 %}
+    <span class="filter-badge">{{ active_count }}</span>
+  {% endif %}
+  <a
+    href="/explore"
+    class="clear-link"
+    {% if active_count == 0 %}aria-disabled="true"{% endif %}
+    hx-get="/explore"
+    hx-target="#results"
+    hx-swap="innerHTML"
+    hx-push-url="true"
+  >Clear all</a>
+</div>
+
 {# OOB: narrow #division options after region or district changes #}
 <select
   id="division"
@@ -61,5 +79,23 @@
   <option value="">All districts</option>
   {% for d in options.districts %}
     <option value="{{ d }}" {% if filters.district == d %}selected{% endif %}>{{ d }}</option>
+  {% endfor %}
+</select>
+
+{# OOB: narrow #municipality options after division changes #}
+<select
+  id="municipality"
+  name="municipality"
+  class="filter-select"
+  hx-get="/explore"
+  hx-trigger="change"
+  hx-target="#results"
+  hx-swap="innerHTML"
+  hx-include="[name]"
+  hx-swap-oob="outerHTML"
+>
+  <option value="">All municipalities</option>
+  {% for m in options.municipalities %}
+    <option value="{{ m }}" {% if filters.municipality == m %}selected{% endif %}>{{ m }}</option>
   {% endfor %}
 </select>

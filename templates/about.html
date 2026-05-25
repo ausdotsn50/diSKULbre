@@ -1,1 +1,63 @@
 {% extends "base.html" %}
+
+{% block title %} - About{% endblock %}
+
+{% block head_extra %}
+<link rel="stylesheet" href="/static/about.css">
+{% endblock %}
+
+
+{% block content %}
+<div class="about-page">
+
+  <h1 class="about-title">About diSKULbre</h1>
+  <p class="about-tagline">A public slicer for the DepEd BEIS school masterlist.</p>
+
+  <div class="about-section">
+    <h2>Data source</h2>
+    <p>
+      This site is built on the <strong>Basic Education Information System (BEIS)</strong>
+      school masterlist published by the Department of Education Philippines.
+      The dataset covers all registered schools in the Philippines — public, private, 
+      and government-run colleges — as recorded in the DepEd BEIS masterlist.
+    </p>
+    <p class="snapshot-date">
+      Snapshot date: <strong>SY 2020 - 2021</strong>
+    </p>
+    <ul class="about-list">
+      <li>
+        <a href="https://www.deped.gov.ph/wp-content/uploads/2021/06/SY-2020-2021-Masterlist-of-Schools-Address-only-1-1.pdf" target="_blank" rel="noopener">
+          DepEd — SY 2020–2021 Masterlist of Schools (PDF)
+        </a>
+      </li>
+      <li>
+        <a href="https://www.kaggle.com/datasets/bwandowando/deped-philippine-school-masterlist-2020-21" target="_blank" rel="noopener">
+          Kaggle — DepEd Philippine School Masterlist 2020–21
+        </a>
+      </li>
+    </ul>
+  </div>
+
+  <div class="about-section">
+    <h2>What this data does not include</h2>
+    <ul class="about-list">
+      <li>Enrollment or student population counts</li>
+      <li>Teacher counts or learner-teacher ratios</li>
+      <li>GPS coordinates or precise school locations</li>
+      <li>Academic performance or NAT results</li>
+      <li>School facilities or infrastructure data</li>
+      <li>Contact information or school hours</li>
+    </ul>
+  </div>
+
+  <div class="about-section about-section--disclaimer">
+  <p>
+    DiSKULbre is an independent civic project and is
+    <strong>not affiliated with, endorsed by, or officially connected
+    to the Department of Education Philippines</strong> in any way.
+    Data is reproduced for public interest use.
+  </p>
+
+</div>
+{% endblock %}
+

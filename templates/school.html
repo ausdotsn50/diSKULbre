@@ -8,9 +8,9 @@
 
 {% block content %}
 
-<a class="back-link" href="/explore?district={{ school.district }}">
+<a class="back-link" href="/explore?municipality={{ school.municipality }}">
   <img src="/static/icons/back.svg" alt="back-icon" aria-hidden="true" class="back-icon">
-  Explore more schools in {{ school.district }}
+  Explore more schools in {{ school.municipality }}
 </a>
 
 <div class="school-header">
@@ -140,11 +140,8 @@
         <span class="context-number">{{ context_stats.same_offering_in_division }}</span>
         <span class="context-desc">
           offer <strong>{{ school.offering }}</strong>
-          in this division
         </span>
       </div>
-
-      {# Natural language phrasing e.g. "One of 47 schools in Tacloban City" #}
       <p class="context-sentence">
         One of {{ context_stats.in_municipality }}
         school{{ 's' if context_stats.in_municipality != 1 }}
@@ -162,10 +159,10 @@
         <li>
           <a
             class="onward-link"
-            href="/explore?municipality={{ school.municipality | urlencode }}"
+            href="/explore?region={{ school.region | urlencode }}"
           >
-            <span class="onward-label">All schools in {{ school.municipality }}</span>
-            <span class="onward-count">{{ context_stats.in_municipality }}</span>
+            <span class="onward-label">All schools in {{ school.region }}</span>
+            <span class="onward-count">{{ context_stats.in_region }}</span>
           </a>
         </li>
         <li>
@@ -180,10 +177,10 @@
         <li>
           <a
             class="onward-link"
-            href="/explore?legislative_district={{ school.legislative_district | urlencode }}"
+            href="/explore?district={{ school.district | urlencode }}"
           >
-            <span class="onward-label">All schools in {{ school.legislative_district }}</span>
-            <span class="onward-count">{{ context_stats.in_legislative_district }}</span>
+            <span class="onward-label">All schools in {{ school.district }}</span>
+            <span class="onward-count">{{ context_stats.in_district }}</span>
           </a>
         </li>
       </ul>

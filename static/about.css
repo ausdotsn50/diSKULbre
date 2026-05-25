@@ -1,0 +1,120 @@
+/* ============================================================
+   about.css — About page styles
+   Depends on: style.css (tokens, reset, nav, strip)
+   Used by: templates/about.html
+   ============================================================ */
+
+.about-page {
+  margin: 0 auto;
+  padding: 2rem 0;
+}
+
+.about-title {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 0.25rem;
+}
+
+.about-tagline {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--ink-muted);
+  margin-bottom: 2.5rem;
+  letter-spacing: 0.02em;
+}
+
+.about-section {
+  margin-bottom: 2rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid var(--rule);
+}
+
+.about-section:last-child {
+  border-bottom: none;
+}
+
+.about-section h2 {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--ink-muted);
+  margin-bottom: 0.85rem;
+}
+
+.about-section p {
+  font-family: var(--font-body);
+  font-size: 0.92rem;
+  color: var(--ink-mid);
+  line-height: 1.7;
+  margin-bottom: 0.65rem;
+}
+
+.about-section p:last-child {
+  margin-bottom: 0;
+}
+
+.about-section a {
+  color: var(--accent);
+}
+
+.snapshot-date {
+  font-family: var(--font-mono);
+  font-size: 0.82rem;
+  color: var(--ink);
+  background: var(--paper-raised);
+  border: 1px solid var(--rule);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--radius);
+  padding: 0.6rem 0.85rem;
+  margin-top: 0.75rem;
+  display: block;
+}
+
+.snapshot-date strong {
+  color: var(--ink);
+  font-weight: 500;
+}
+
+.about-list {
+  font-family: var(--font-body);
+  font-size: 0.9rem;
+  color: var(--ink-mid);
+  line-height: 1.7;
+  padding-left: 1.25rem;
+  margin-bottom: 0.75rem;
+}
+
+.about-list li {
+  margin-bottom: 0.2rem;
+}
+
+.cite-example {
+  background: var(--ink);
+  border-radius: var(--radius);
+  padding: 0.75rem 1rem;
+  margin: 0.65rem 0;
+  overflow-x: auto;
+}
+
+.cite-example code {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: #f5f3ee;
+  white-space: nowrap;
+}
+
+.about-section--disclaimer p {
+  font-size: 0.82rem;
+  color: var(--ink-muted);
+  font-style: italic;
+}
+
+.about-section--disclaimer strong {
+  font-style: normal;
+  color: var(--ink-mid);
+  font-weight: 400;
+}

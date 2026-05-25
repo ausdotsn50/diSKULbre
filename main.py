@@ -18,7 +18,7 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 
 PER_PAGE = 50
-DF = load_schools('data/beis_project.csv')
+DF = load_schools('data/beis_masterlist.csv')
 
 # Unique values
 OPTIONS = {
@@ -29,17 +29,19 @@ OPTIONS = {
     "subclasses": DF["subclass"].dropna().unique().tolist(),
 }
 
-
 def main():
     """Entry point. Starts the Uvicorn development server."""
     uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)
 
 
 # Routes
-@app.get("/", response_class=HTMLResponse)
-def index(request: Request) -> Response:
-    return templates.TemplateResponse(request, "base.html")
+@app.get("/")
+async def index():
+    return RedirectResponse(url="/explore")
 
+@app.get("/about", response_class=HTMLResponse)
+def about(request: Request) -> Response:
+    return templates.TemplateResponse(request, "about.html")
 
 @app.get("/explore")
 async def explore(
@@ -48,6 +50,7 @@ async def explore(
     region: str = Query(default=""),
     division: str = Query(default=""),
     district: str = Query(default=""),
+    municipality: str = Query(default=""),
     sector: str = Query(default=""),
     urban_rural: str = Query(default=""),
     offering: str = Query(default=""),
@@ -60,6 +63,7 @@ async def explore(
             "region": region,
             "division": division,
             "district": district,
+            "municipality": municipality,
             "sector": sector,
             "urban_rural": urban_rural,
             "offering": offering,
@@ -75,6 +79,7 @@ async def explore(
         ("region", "effective_region"),
         ("division", "effective_division"),
         ("district", "effective_district"),
+        ("municipality", "effective_municipality"),
     ]:
         effective = cascade_opts[eff_key]
         if effective:
@@ -101,21 +106,23 @@ async def explore(
             "total_pages": total_pages,
             "total_results": total_results,
             "per_page": PER_PAGE,
-            "base_url": f"/explore?{urlencode(filters)}" if filters else "/explore",
+            "base_url": f"/explore?{urlencode(filters)}&" if filters else "/explore?",
         },
     }
 
     if request.headers.get("HX-Request"):
-        qs = urlencode(filters)
+        qs_parts = [urlencode(filters)] if filters else []
         if page > 1:
-            qs += f"&page={page}"
+            qs_parts.append(f"page={page}")
+        qs = "&".join(qs_parts)
         clean_url = f"/explore?{qs}" if qs else "/explore"
 
         # Cascade-up: district (or division) inferred parent values — redirect so
         # the full page re-renders with all dropdowns correctly populated.
         cascade_up = (
             (cascade_opts["effective_region"] and not region) or
-            (cascade_opts["effective_division"] and not division)
+            (cascade_opts["effective_division"] and not division) or
+            (cascade_opts["effective_municipality"] and not municipality)
         )
         if cascade_up:
             return Response(content="", headers={"HX-Redirect": clean_url})
@@ -124,13 +131,46 @@ async def explore(
         response.headers["HX-Push-Url"] = clean_url
         return response
 
-    qs = urlencode(filters)
+    qs_parts = [urlencode(filters)] if filters else []
     if page > 1:
-        qs += f"&page={page}"
+        qs_parts.append(f"page={page}")
+    qs = "&".join(qs_parts)
     dirty_qs = str(request.query_params)
     if dirty_qs != qs:
         return RedirectResponse(f"/explore?{qs}" if qs else "/explore")
     return templates.TemplateResponse(request, "explore.html", context)
+
+
+# Check accuracy of school route
+@app.get("/school/{school_id}", response_class=HTMLResponse)
+async def school_detail(request: Request, school_id: str) -> Response:
+    row = DF[DF["school_id"] == school_id]
+    if row.empty:
+        return templates.TemplateResponse(request, "status/404.html", status_code=404)
+
+    school = row.iloc[0].to_dict()
+
+    # Modify for context stats in school
+    context_stats = {
+        "in_municipality": int((DF["municipality"] == school["municipality"]).sum()),
+        "in_district": int((DF["district"] == school["district"]).sum()),
+        "public_in_municipality": int(
+            ((DF["municipality"] == school["municipality"]) & (DF["sector"] == "Public")).sum()
+        ),
+        "in_division": int((DF["division"] == school["division"]).sum()),
+        "same_offering_in_division": int(
+            ((DF["division"] == school["division"]) & (DF["offering"] == school["offering"])).sum()
+        ),
+        "in_region": int(
+            (DF["region"] == school["region"]).sum()
+        ),
+    }
+
+    return templates.TemplateResponse(request, "school.html", {
+        "school": school,
+        "context_stats": context_stats,
+        "aggregates": None,
+    })
 
 if __name__ == '__main__':
     main()
