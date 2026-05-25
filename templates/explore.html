@@ -97,9 +97,9 @@
       autocomplete="off"
     >
 
-      <div class="rail-header">
+      <div class="rail-header" id="rail-header">
         <span class="rail-title">Filters</span>
-        {% set active_count = filters | selectattr('value') | list | length %}
+        {% set active_count = filters | length %}
         {% if active_count > 0 %}
           <span class="filter-badge">{{ active_count }}</span>
         {% endif %}
