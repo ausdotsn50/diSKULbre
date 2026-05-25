@@ -46,6 +46,42 @@
   >Clear all</a>
 </div>
 
+{# OOB: clear search input #}
+<input
+  id="search"
+  type="search"
+  name="search"
+  value="{{ filters.search or '' }}"
+  placeholder="Enter school name"
+  class="filter-input"
+  hx-get="/explore"
+  hx-trigger="input changed delay:300ms"
+  hx-target="#results"
+  hx-swap="innerHTML"
+  hx-push-url="true"
+  hx-include="[name]"
+  hx-swap-oob="outerHTML"
+>
+
+{# OOB: reset region #}
+<select
+  id="region"
+  name="region"
+  class="filter-select"
+  hx-get="/explore"
+  hx-trigger="change"
+  hx-target="#results"
+  hx-swap="innerHTML"
+  hx-push-url="true"
+  hx-include="[name]"
+  hx-swap-oob="outerHTML"
+>
+  <option value="">All regions</option>
+  {% for r in options.regions %}
+    <option value="{{ r }}" {% if filters.region == r %}selected{% endif %}>{{ r }}</option>
+  {% endfor %}
+</select>
+
 {# OOB: narrow #division options after region or district changes #}
 <select
   id="division"
@@ -97,5 +133,81 @@
   <option value="">All municipalities</option>
   {% for m in options.municipalities %}
     <option value="{{ m }}" {% if filters.municipality == m %}selected{% endif %}>{{ m }}</option>
+  {% endfor %}
+</select>
+
+{# OOB: reset sector #}
+<select
+  id="sector"
+  name="sector"
+  class="filter-select"
+  hx-get="/explore"
+  hx-trigger="change"
+  hx-target="#results"
+  hx-swap="innerHTML"
+  hx-push-url="true"
+  hx-include="[name]"
+  hx-swap-oob="outerHTML"
+>
+  <option value="">All sectors</option>
+  {% for s in options.sectors %}
+    <option value="{{ s }}" {% if filters.sector == s %}selected{% endif %}>{{ s }}</option>
+  {% endfor %}
+</select>
+
+{# OOB: reset urban_rural #}
+<select
+  id="urban_rural"
+  name="urban_rural"
+  class="filter-select"
+  hx-get="/explore"
+  hx-trigger="change"
+  hx-target="#results"
+  hx-swap="innerHTML"
+  hx-push-url="true"
+  hx-include="[name]"
+  hx-swap-oob="outerHTML"
+>
+  <option value="">Urban &amp; rural</option>
+  {% for ur in options.urban_rural %}
+    <option value="{{ ur }}" {% if filters.urban_rural == ur %}selected{% endif %}>{{ ur }}</option>
+  {% endfor %}
+</select>
+
+{# OOB: reset offering #}
+<select
+  id="offering"
+  name="offering"
+  class="filter-select"
+  hx-get="/explore"
+  hx-trigger="change"
+  hx-target="#results"
+  hx-swap="innerHTML"
+  hx-push-url="true"
+  hx-include="[name]"
+  hx-swap-oob="outerHTML"
+>
+  <option value="">All offerings</option>
+  {% for o in options.offerings %}
+    <option value="{{ o }}" {% if filters.offering == o %}selected{% endif %}>{{ o }}</option>
+  {% endfor %}
+</select>
+
+{# OOB: reset subclass #}
+<select
+  id="subclass"
+  name="subclass"
+  class="filter-select"
+  hx-get="/explore"
+  hx-trigger="change"
+  hx-target="#results"
+  hx-swap="innerHTML"
+  hx-push-url="true"
+  hx-include="[name]"
+  hx-swap-oob="outerHTML"
+>
+  <option value="">All types</option>
+  {% for sc in options.subclasses %}
+    <option value="{{ sc }}" {% if filters.subclass == sc %}selected{% endif %}>{{ sc }}</option>
   {% endfor %}
 </select>
