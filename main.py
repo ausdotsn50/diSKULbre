@@ -18,7 +18,7 @@ app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 
 PER_PAGE = 50
-DF = load_schools('data/beis_project.csv')
+DF = load_schools('data/beis_masterlist.csv')
 
 # Unique values
 OPTIONS = {
@@ -149,6 +149,7 @@ async def school_detail(request: Request, school_id: str) -> Response:
     # Modify for context stats in school
     context_stats = {
         "in_municipality": int((DF["municipality"] == school["municipality"]).sum()),
+        "in_district": int((DF["district"] == school["district"]).sum()),
         "public_in_municipality": int(
             ((DF["municipality"] == school["municipality"]) & (DF["sector"] == "Public")).sum()
         ),
