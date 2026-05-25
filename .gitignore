@@ -1,6 +1,5 @@
 .env
 *.pdf
-*.csv
 *.pyc
 .venv/
 __pycache__/

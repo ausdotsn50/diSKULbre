@@ -29,7 +29,7 @@ OPTIONS = {
     "subclasses": DF["subclass"].dropna().unique().tolist(),
 }
 
-def main():
+def main() -> None:
     """Entry point. Starts the Uvicorn development server."""
     uvicorn.run("main:app", host="127.0.0.1", port=8000, reload=True)
 

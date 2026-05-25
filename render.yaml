@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: diskulbre
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn project:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: BEIS_CSV_PATH
+        value: data/beis_schools.csv
+    autoDeploy: true
