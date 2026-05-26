@@ -40,6 +40,10 @@ def main() -> None:
 
 
 # Routes
+@app.get("/health")
+async def health():
+    return {"status": "ok", "schools": len(DF)}
+
 @app.get("/")
 async def index():
     return RedirectResponse(url="/explore")
